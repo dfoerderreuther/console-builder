@@ -4,14 +4,21 @@ import com.google.common.collect.Iterables;
 import jline.console.ConsoleReader;
 import jline.console.completer.AggregateCompleter;
 import jline.console.completer.Completer;
+import jline.console.history.FileHistory;
+import jline.console.history.MemoryHistory;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Console {
 
+
     private static Console instance;
 
+    protected FileHistory history;
     protected ConsoleReader consoleReader;
 
     private Console() {
@@ -32,6 +39,28 @@ public class Console {
 
     protected void init() {
         consoleReader.setPrompt("> ");
+    }
+
+    public void enableHistoryFrom(String file) {
+        try {
+            Path directory = Paths.get(System.getProperty("user.home"), ".jline");
+            Path historyFile = Paths.get(directory.toString(), file);
+            if (!directory.toFile().exists()) {
+                Files.createDirectories(directory);
+            }
+            if (!historyFile.toFile().exists()) {
+                Files.createFile(historyFile);
+            }
+            history = new FileHistory(historyFile.toFile());
+            consoleReader.setHistory(history);
+        } catch (IOException e) {
+            throw new IllegalStateException("Can't create history file", e);
+        }
+    }
+
+    public void disableHistory() {
+        consoleReader.setHistory(new MemoryHistory());
+        consoleReader.setHistoryEnabled(false);
     }
 
     public ConsoleReader getConsoleReader() {
@@ -61,18 +90,25 @@ public class Console {
 
     public String getInput() {
         try {
-            return consoleReader.readLine();
+            String ret = consoleReader.readLine();
+            if (ret != null && !ret.isEmpty() && consoleReader.isHistoryEnabled() && history != null) {
+                history.add(ret);
+                history.flush();
+            }
+            return ret;
         } catch (IOException e) {
             throw new IllegalStateException("Can't read from console", e);
         }
     }
 
 
+
     public void beep() {
         try {
             consoleReader.beep();
         } catch (IOException e) {
-            throw new IllegalStateException("Can'T write to console", e);
+            throw new IllegalStateException("Can't write to console", e);
         }
     }
+
 }

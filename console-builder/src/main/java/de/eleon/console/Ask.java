@@ -1,6 +1,7 @@
 package de.eleon.console;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
@@ -14,6 +15,7 @@ public class Ask {
     private String question;
     private List<Validator> validators = Lists.newArrayList();
     private List<Completer> completers = Lists.newArrayList();
+    private Optional<String> history = Optional.absent();
 
     protected Ask(String question) {
         this.question = question;
@@ -34,14 +36,26 @@ public class Ask {
     }
 
     public String answer() {
-        return getAnswerFromConsole();
+        return initConsoleAndGetAnswer();
     }
 
-    private String getAnswerFromConsole() {
+    public <T> T answer(Function<String, T> function) {
+        return function.apply(answer());
+    }
 
-        Console console = Console.getInstance();
-        console.println(question);
-        console.setCompleters(completers);
+    public Ask useHistory() {
+        this.history = Optional.of("history");
+        return this;
+    }
+
+    public Ask useHistoryFrom(String file) {
+        this.history = Optional.of(file);
+        return this;
+    }
+
+    private String initConsoleAndGetAnswer() {
+
+        Console console = initConsole();
 
         while (true) {
             String input = console.getInput();
@@ -51,6 +65,18 @@ public class Ask {
                 console.println(question);
             }
         }
+    }
+
+    private Console initConsole() {
+        Console console = Console.getInstance();
+        console.println(question);
+        console.setCompleters(completers);
+        if (history.isPresent()) {
+            console.enableHistoryFrom(history.get());
+        } else {
+            console.disableHistory();
+        }
+        return console;
     }
 
     private boolean validate(Console console, String input) {

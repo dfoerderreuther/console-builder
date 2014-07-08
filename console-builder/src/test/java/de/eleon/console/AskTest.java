@@ -42,10 +42,22 @@ public class AskTest {
     }
 
     @Test
-    public void shouldGetAnswer() throws IOException {
+    public void shouldAnswer() throws IOException {
         when(consoleReader.readLine()).thenReturn("test");
         String answer = ask("Hallo").answer();
         assertThat(answer, is("test"));
+    }
+
+    @Test
+    public void shouldAnswerInteger() throws IOException {
+        when(consoleReader.readLine()).thenReturn("12");
+        int answer = ask("Hallo").answer(new Transform<Integer>() {
+            @Override
+            public Integer apply(String input) {
+                return Integer.valueOf(input);
+            }
+        });
+        assertThat(answer, is(12));
     }
 
     @Test
