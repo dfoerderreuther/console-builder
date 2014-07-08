@@ -53,6 +53,7 @@ public class Console {
             }
             history = new FileHistory(historyFile.toFile());
             consoleReader.setHistory(history);
+            consoleReader.setHistoryEnabled(true);
         } catch (IOException e) {
             throw new IllegalStateException("Can't create history file", e);
         }

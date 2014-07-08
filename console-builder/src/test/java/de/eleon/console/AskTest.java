@@ -83,6 +83,8 @@ public class AskTest {
         assertTrue(findBy("should not be empty").isPresent());
     }
 
+
+
     private Optional<CharSequence> findBy(final String text) {
         return FluentIterable.from(printlnCaptor.getAllValues()).firstMatch(new Predicate<CharSequence>() {
             @Override

@@ -69,6 +69,7 @@ public class Ask {
 
     private Console initConsole() {
         Console console = Console.getInstance();
+        console.println("");
         console.println(question);
         console.setCompleters(completers);
         if (history.isPresent()) {
