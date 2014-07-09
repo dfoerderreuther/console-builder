@@ -181,6 +181,7 @@ public class Ask {
             if (validate(console, input)) {
                 return input;
             } else {
+                console.println("");
                 console.println(question);
             }
         }

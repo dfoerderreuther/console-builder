@@ -39,6 +39,7 @@ Result in terminal:
     Please enter your gender     
     > robot
     Please enter valid gender
+    
     Please enter your gender
     > <Tab>
     female   male 
