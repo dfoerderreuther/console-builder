@@ -107,6 +107,9 @@ public class Console {
     public String getInput() {
         try {
             String ret = consoleReader.readLine();
+            if (ret != null) {
+                ret = ret.trim();
+            }
             if (ret != null && !ret.isEmpty() && consoleReader.isHistoryEnabled() && history != null) {
                 history.add(ret);
                 history.flush();

@@ -28,24 +28,44 @@ Result in terminal:
     > Dominik
     Hello Dominik
     
-### Example 2 (completion, value transformation)
-
-    Gender gender = Ask.ask("Please enter your gender")
-            .validateWith(validateGender("Please enter valid gender"))
-            .completeWith(new StringsCompleter(FluentIterable.from(newArrayList(Gender.values())).transform(fromGender()).toList()))
-            .answer(toGender());  
-    System.out.println("Gender " + gender.toString());
+### Example 2 (completion and validation, enum magic)
+                                    
+    Gender gender = ask("Please enter your gender")
+            .answer(Gender.class, "Please enter valid gender");
+    System.out.println("Gender " + gender.toString());  
     
 Result in terminal: 
 
+    Please enter your gender     
+    > robot
+    Please enter valid gender
     Please enter your gender
     > <Tab>
-    FEMALE   MALE     
-    > MA<TAB>
-    > MALE
-    Gender MALE
+    female   male 
+    > m<Tab>ale 
+    > male
+    Gender male
+
+### Example 3 (completion, value transformation)
+                                                    
+    Integer age = ask("how old are you?")
+            .completeWith(new StringsCompleter("22", "33", "44", "55", "66"))
+            .validateWith(validateAge("please enter valid age"))
+            .answer(toInteger());          
+    System.out.println("Age " + age);  
     
-### Example 3 (history with specific file)
+    
+Result in terminal: 
+
+    how old are you?
+    > <Tab>
+    22   33   44   55   66   
+    > 4<Tab>
+    > 44
+    Age 44
+    
+    
+### Example 4 (history with specific file)
     
     String favoriteColor = Ask.ask("What ist your favorite color?")
             .useHistoryFrom("color")

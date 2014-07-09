@@ -21,6 +21,7 @@ import com.google.common.collect.FluentIterable;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.FileNameCompleter;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +46,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest(ConsoleReader.class)
 public class AskTest {
 
+    public enum TestEnum {a, b, c}
+
     @Mock
     ConsoleReader consoleReader;
 
@@ -66,13 +69,40 @@ public class AskTest {
     @Test
     public void shouldAnswerInteger() throws IOException {
         when(consoleReader.readLine()).thenReturn("12");
-        int answer = ask("Question").answer(new Transform<Integer>() {
-            @Override
-            public Integer apply(String input) {
-                return Integer.valueOf(input);
-            }
-        });
+        int answer = ask("Question")
+                .answer(Transformers.toInteger());
         assertThat(answer, is(12));
+    }
+
+    @Test
+    public void shouldAnswerIntegerAfterGrubbyInput() throws IOException {
+        when(consoleReader.readLine()).thenReturn(" 12 ");
+        int answer = ask("Question")
+                .answer(Transformers.toInteger());
+        assertThat(answer, is(12));
+    }
+
+    @Test
+    public void shouldValidateInteger() throws IOException {
+        when(consoleReader.readLine()).thenReturn("test", "12");
+        int answer = ask("Question")
+                .answer(Transformers.toInteger());
+        assertThat(answer, is(12));
+
+        verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
+        assertTrue(findBy("unknown value").isPresent());
+    }
+
+    @Test
+    public void shouldValidateIntegerWithCustomMessage() throws IOException {
+        when(consoleReader.readLine()).thenReturn("test", "12");
+        int answer = ask("Question")
+                .answer(Transformers.toInteger(), "wrong number");
+        assertThat(answer, is(12));
+
+        verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
+        assertFalse(findBy("unknown value").isPresent());
+        assertTrue(findBy("wrong number").isPresent());
     }
 
     @Test
@@ -97,6 +127,35 @@ public class AskTest {
         verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
         assertTrue(findBy("should not be empty").isPresent());
     }
+
+    @Test
+    public void shouldAnswerEnum() throws IOException {
+        when(consoleReader.readLine()).thenReturn("a");
+        TestEnum testEnum = ask("a or b").answer(TestEnum.class);
+
+        Assert.assertThat(testEnum, is(TestEnum.a));
+    }
+
+    @Test
+    public void shouldAnswerEnumInWrongCase() throws IOException {
+        when(consoleReader.readLine()).thenReturn("A");
+        TestEnum testEnum = ask("a or b").answer(TestEnum.class);
+
+        Assert.assertThat(testEnum, is(TestEnum.a));
+    }
+
+    @Test
+    public void shouldValidateEnum() throws IOException {
+        when(consoleReader.readLine()).thenReturn("test", "a");
+        TestEnum testEnum = ask("a or b").answer(TestEnum.class);
+
+        Assert.assertThat(testEnum, is(TestEnum.a));
+
+        verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
+        assertTrue(findBy("unknown value").isPresent());
+    }
+
+
 
     private Optional<CharSequence> findBy(final String text) {
         return FluentIterable.from(printlnCaptor.getAllValues()).firstMatch(new Predicate<CharSequence>() {

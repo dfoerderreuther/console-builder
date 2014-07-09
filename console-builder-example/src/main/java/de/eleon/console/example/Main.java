@@ -1,16 +1,14 @@
 package de.eleon.console.example;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import de.eleon.console.Transform;
+import com.google.common.collect.Range;
 import de.eleon.console.Validator;
 import de.eleon.console.Validators;
 import jline.console.completer.StringsCompleter;
 
 import java.io.IOException;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static de.eleon.console.Ask.ask;
+import static de.eleon.console.Transformers.toInteger;
 
 public class Main {
 
@@ -33,32 +31,31 @@ public class Main {
                 .answer();
 
         Gender gender = ask("Please enter your gender")
-                .validateWith(validateGender("Please enter valid gender"))
-                .completeWith(new StringsCompleter(FluentIterable.from(newArrayList(Gender.values())).transform(fromGender()).toList()))
-                .answer(toGender());
+                .answer(Gender.class, "Please enter valid gender");
 
         String favoriteColor = ask("What ist your favorite color?")
                 .useHistoryFrom("color")
                 .answer();
 
-        System.out.println("First name " + firstName + ", last name " + lastName + ", gender " + gender + ", favoriteColor " + favoriteColor);
+        Integer age = ask("how old are you?")
+                .completeWith(new StringsCompleter("22", "33", "44", "55", "66"))
+                .validateWith(validateAge("please enter valid age"))
+                .answer(toInteger());
+
+        System.out.println("First name " + firstName +
+                ", last name " + lastName +
+                ", gender " + gender +
+                ", favoriteColor " + favoriteColor +
+                ", age " + age);
         System.exit(0);
     }
 
-    public static void main(String[] args) throws IOException {
-        new Main();
-    }
-
-    private static Validator validateGender(final String message) {
+    private Validator validateAge(final String message) {
         return new Validator() {
             @Override
             public boolean valid(String input) {
-                try {
-                    toGender().apply(input);
-                    return true;
-                } catch (IllegalArgumentException e) {
-                    return false;
-                }
+                Integer age = Integer.valueOf(input);
+                return Range.closed(10, 99).contains(age);
             }
 
             @Override
@@ -68,21 +65,8 @@ public class Main {
         };
     }
 
-    private static Function<Gender, String> fromGender() {
-        return new Function<Gender, String>() {
-            @Override
-            public String apply(Gender input) {
-                return input.toString();
-            }
-        };
+    public static void main(String[] args) throws IOException {
+        new Main();
     }
 
-    private static Transform<Gender> toGender() {
-        return new Transform<Gender>() {
-            @Override
-            public Gender apply(String input) {
-                return Gender.valueOf(input.toUpperCase());
-            }
-        };
-    }
 }

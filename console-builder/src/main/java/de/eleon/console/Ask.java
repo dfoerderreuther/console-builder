@@ -22,8 +22,13 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import jline.console.completer.Completer;
+import jline.console.completer.EnumCompleter;
 
 import java.util.List;
+
+import static de.eleon.console.Transformers.toEnum;
+import static de.eleon.console.Validators.enumValidator;
+import static de.eleon.console.Validators.functionValidator;
 
 /**
  * Ask is a builder for a single Question console.
@@ -114,14 +119,52 @@ public class Ask {
     }
 
     /**
-     * Return user input
+     * Return user input as T
      *
-     * @param function {@link Function} or {@link Transform} for value conversion
+     * @param function {@link Function} or {@link Transformer} for value conversion
      * @param <T> the return type
      * @return user input as T
      */
     public <T> T answer(Function<String, T> function) {
+        return answer(function, "unknown value");
+    }
+
+    /**
+     * Return user input as T
+     *
+     * @param function {@link Function} or {@link Transformer} for value conversion
+     * @param validationErrorMessage error message if function conversion fails
+     * @param <T> the return type
+     * @return user input as T
+     */
+    public <T> T answer(Function<String, T> function, final String validationErrorMessage) {
+        validateWith(functionValidator(function, validationErrorMessage));
         return function.apply(answer());
+    }
+
+    /**
+     * Return user input as T extends Enum<T>. Complete with enum values.
+     *
+     * @param enumClass Class of enum to return
+     * @param <T> the return type
+     * @return user input as enum value
+     */
+    public <T extends Enum<T>> T answer(final Class<T> enumClass) {
+        return answer(enumClass, "unknown value");
+    }
+
+    /**
+     * Return user input as T extends Enum<T>. Complete with enum values.
+     *
+     * @param enumClass Class of enum to return
+     * @param validationErrorMessage error message if enum conversion fails
+     * @param <T> the return type
+     * @return user input as enum value
+     */
+    public <T extends Enum<T>> T answer(final Class<T> enumClass, final String validationErrorMessage) {
+        validateWith(enumValidator(enumClass, validationErrorMessage));
+        completeWith(new EnumCompleter(enumClass));
+        return toEnum(enumClass).apply(answer());
     }
 
     /**
@@ -193,7 +236,11 @@ public class Ask {
                 .filter(new Predicate<Validator>() {
                     @Override
                     public boolean apply(Validator validator) {
-                        return !validator.valid(input);
+                        try {
+                            return !validator.valid(input);
+                        } catch (Exception e) {
+                            return true;
+                        }
                     }
                 })
                 .transform(new Function<Validator, String>() {
