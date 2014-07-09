@@ -6,7 +6,7 @@ This is a small builder api based on JLine and Guava.
 
 ### Example 1 (Validation)
     
-    String firstName = ask("Please enter your first name")
+    String firstName = Ask.ask("Please enter your first name")
             .validateWith(Validators.notEmpty("Empty String not allowed"))
             .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
             .answer();
@@ -30,7 +30,7 @@ Result in terminal:
     
 ### Example 2 (completion, value transformation)
 
-    Gender gender = ask("Please enter your gender")
+    Gender gender = Ask.ask("Please enter your gender")
             .validateWith(validateGender("Please enter valid gender"))
             .completeWith(new StringsCompleter(FluentIterable.from(newArrayList(Gender.values())).transform(fromGender()).toList()))
             .answer(toGender());  
@@ -47,7 +47,7 @@ Result in terminal:
     
 ### Example 3 (history with specific file)
     
-    String favoriteColor = ask("What ist your favorite color?")
+    String favoriteColor = Ask.ask("What ist your favorite color?")
             .useHistoryFrom("color")
             .answer();                                   
     System.out.println("Color " + color); 
