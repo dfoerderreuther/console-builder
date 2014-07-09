@@ -2,6 +2,17 @@
 
 This is a small builder api for a console application. It supports validation, completion and history. Used libraries are jline and guava (compile and runtime).
 
+## Features
+* Validation
+* Completion
+* Conversion                                                  
+* Extensive enum support (completion, conversion and validation)
+* History
+* Question specific history                                   
+* IOExceptions from jline encapsulated into runtime exceptions
+* Builder api
+* User input as result of builder
+
 ## Usage
 
 ### Example 1 (Validation)
