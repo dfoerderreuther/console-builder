@@ -64,7 +64,7 @@ Result in terminal:
     > <Tab>|
     22   33   44   55   66   
     > 4<Tab>|
-    > 44
+    > 44|
     Age 44
     
     
