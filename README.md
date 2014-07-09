@@ -1,6 +1,6 @@
 # Console-Builder
 
-This is a small builder api for a console application. It supports validation, completion and history. Used libraries (compile and runtime) are jline and guava.
+This is a small builder api for a console application. It supports validation, completion and history. Used libraries are jline and guava (compile and runtime).
 
 ## Usage
 
