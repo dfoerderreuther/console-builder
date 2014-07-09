@@ -1,3 +1,18 @@
+/*
+* Copyright 2014 Dominik Foerderreuther <dominik@eleon.de>
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package de.eleon.console;
 
 import com.google.common.base.Function;
@@ -10,6 +25,21 @@ import jline.console.completer.Completer;
 
 import java.util.List;
 
+/**
+ * Ask is a builder for a single Question console.
+ *
+ * Example:
+ *
+ *    String answer = Ask.ask("What is your Name?").answer();
+ *    System.out.println("Answer: " + answer);
+ *
+ * The result in the terminal will looks like
+ *
+ *    What is your Name?
+ *    > Dominik|
+ *    Answer: Dominik
+ *
+ */
 public class Ask {
 
     private String question;
@@ -21,38 +51,84 @@ public class Ask {
         this.question = question;
     }
 
-    public static Ask ask(String s) {
-        return new Ask(s);
+    /**
+     * Start new Ask builder
+     *
+     * @param question The question to ask
+     * @return the builder instance
+     */
+    public static Ask ask(String question) {
+        return new Ask(question);
     }
 
+    /**
+     * Add validator to validate answer before returning
+     *
+     * @param validator Validator to add
+     * @return the builder instance
+     */
     public Ask validateWith(Validator validator) {
         this.validators.add(validator);
         return this;
     }
 
+    /**
+     * Add completer for tab completion
+     *
+     * @param completer {@see Completer} to add
+     * @return the builder instance
+     */
     public Ask completeWith(Completer completer) {
         this.completers.add(completer);
         return this;
     }
 
-    public String answer() {
-        return initConsoleAndGetAnswer();
-    }
-
-    public <T> T answer(Function<String, T> function) {
-        return function.apply(answer());
-    }
-
+    /**
+     * Enable usage of history. History will be saved to ~/.jline/history
+     *
+     * @return the builder instance
+     */
     public Ask useHistory() {
         this.history = Optional.of("history");
         return this;
     }
 
+    /**
+     * Enable usage of history of specific file. History will be saved to ~/.jline/{@param file}
+     *
+     * @param file Filename as String
+     * @return the builder instance
+     */
     public Ask useHistoryFrom(String file) {
         this.history = Optional.of(file);
         return this;
     }
 
+    /**
+     * Return user input
+     *
+     * @return user input as String
+     */
+    public String answer() {
+        return initConsoleAndGetAnswer();
+    }
+
+    /**
+     * Return user input
+     *
+     * @param function {@link Function} or {@link Transform} for value conversion
+     * @param <T> the return type
+     * @return user input as T
+     */
+    public <T> T answer(Function<String, T> function) {
+        return function.apply(answer());
+    }
+
+    /**
+     * Initialize console and get user input as answer
+     *
+     * @return user input as String
+     */
     private String initConsoleAndGetAnswer() {
 
         Console console = initConsole();
@@ -67,6 +143,11 @@ public class Ask {
         }
     }
 
+    /**
+     * Initialize Console, write question, add completers and enable / disable history
+     *
+     * @return Console instance
+     */
     private Console initConsole() {
         Console console = Console.getInstance();
         console.println("");
@@ -80,6 +161,13 @@ public class Ask {
         return console;
     }
 
+    /**
+     * Validate user input with available validators
+     *
+     * @param console Console to print errir messages
+     * @param input User input as String
+     * @return boolean of validation result. valid == true
+     */
     private boolean validate(Console console, String input) {
         Iterable<String> errors = validate(input);
         if (!Iterables.isEmpty(errors)) {
@@ -93,6 +181,12 @@ public class Ask {
         }
     }
 
+    /**
+     * Validate user input with list of {@see Validator} and collect error messages if available
+     *
+     * @param input user input as String
+     * @return Iterable with error messages. Empty if valid.
+     */
     private Iterable<String> validate(final String input) {
         return FluentIterable
                 .from(validators)
