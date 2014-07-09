@@ -25,7 +25,7 @@ Result in terminal:
     Invalid format  
                       
     Please enter your first name
-    > Dominik
+    > Dominik|
     Hello Dominik
     
 ### Example 2 (completion and validation, enum magic)
@@ -39,14 +39,14 @@ Result in terminal:
 Result in terminal: 
 
     Please enter your gender     
-    > robot
+    > robot|
     Please enter valid gender
     
     Please enter your gender
-    > <Tab>
+    > <Tab>|
     female   male 
-    > m<Tab>ale 
-    > male
+    > m<Tab>| 
+    > male|
     Gender male
 
 ### Example 3 (completion, value transformation)
@@ -61,9 +61,9 @@ Result in terminal:
 Result in terminal: 
 
     how old are you?
-    > <Tab>
+    > <Tab>|
     22   33   44   55   66   
-    > 4<Tab>
+    > 4<Tab>|
     > 44
     Age 44
     
@@ -78,14 +78,14 @@ Result in terminal:
 Result in terminal: 
 
     What ist your favorite color?
-    > red
+    > red|
     Color red
     
 Second run
 
     What ist your favorite color?
-    > <ArrowUp>
-    > red     
+    > <ArrowUp>|
+    > red|     
     Color red
     
         
