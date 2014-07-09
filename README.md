@@ -101,25 +101,23 @@ Second run
     
 ### Example 5, combinated questions
 
-
     Person person = new Person(
-            ask("Please enter your first name")
-            .validateWith(Validators.notEmpty("Empty String not allowed")).answer(),
-            ask("Please enter your gender").answer(Gender.class, "Please enter valid gender"),
-            ask("how old are you?").answer(toInteger())
+            Ask.ask("Please enter first name").validateWith(Validators.notEmpty("Empty not allowed")).answer(),
+            Ask.ask("Please enter gender").answer(Gender.class, "Please enter valid gender"),
+            Ask.ask("Please enter age").answer(toInteger())
     );
 
     System.out.println("person: " + person);
 
 Result in terminal: 
 
-    Please enter your first name
+    Please enter first name
     > Buzz Lightyear
     
-    Please enter your gender
+    Please enter gender
     > male 
     
-    how old are you?
+    Please enter age
     > 25
     
     person: Person{name=Buzz Lightyear, gender=MALE, age=25}
