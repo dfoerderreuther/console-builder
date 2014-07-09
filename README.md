@@ -29,7 +29,9 @@ Result in terminal:
     Hello Dominik
     
 ### Example 2 (completion and validation, enum magic)
-                                    
+              
+    public enum Gender { MALE, FEMALE }
+    ...                                
     Gender gender = ask("Please enter your gender")
             .answer(Gender.class, "Please enter valid gender");
     System.out.println("Gender " + gender.toString());  
