@@ -99,4 +99,30 @@ Second run
     > red|     
     Color red
     
+### Example 5, combinated questions
+
+
+    Person person = new Person(
+            ask("Please enter your first name")
+            .validateWith(Validators.notEmpty("Empty String not allowed")).answer(),
+            ask("Please enter your gender").answer(Gender.class, "Please enter valid gender"),
+            ask("how old are you?").answer(toInteger())
+    );
+
+    System.out.println("person: " + person);
+
+Result in terminal: 
+
+    Please enter your first name
+    > Buzz Lightyear
+    
+    Please enter your gender
+    > male 
+    
+    how old are you?
+    > 25
+    
+    person: Person{name=Buzz Lightyear, gender=MALE, age=25}
+
+    
         

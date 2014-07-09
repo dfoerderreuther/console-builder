@@ -1,6 +1,7 @@
 package de.eleon.console.example;
 
 import com.google.common.collect.Range;
+import de.eleon.console.Console;
 import de.eleon.console.Validator;
 import de.eleon.console.Validators;
 import jline.console.completer.StringsCompleter;
@@ -9,12 +10,10 @@ import java.io.IOException;
 
 import static de.eleon.console.Ask.ask;
 import static de.eleon.console.Transformers.toInteger;
+import static de.eleon.console.example.Person.Gender;
 
 public class Main {
 
-    public enum Gender {
-        MALE, FEMALE
-    }
 
     public Main() {
 
@@ -47,7 +46,23 @@ public class Main {
                 ", gender " + gender +
                 ", favoriteColor " + favoriteColor +
                 ", age " + age);
+
+
+        // Example creation of object
+
+        Console.getInstance().println("Create person");
+
+        Person person = new Person(
+                ask("Please enter your first name")
+                .validateWith(Validators.notEmpty("Empty String not allowed")).answer(),
+                ask("Please enter your gender").answer(Gender.class, "Please enter valid gender"),
+                ask("how old are you?").answer(toInteger())
+        );
+
+        System.out.println("person: " + person);
+
         System.exit(0);
+
     }
 
     private Validator validateAge(final String message) {
