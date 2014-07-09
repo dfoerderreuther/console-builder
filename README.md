@@ -11,7 +11,7 @@ This is a small builder api for a console application. It supports validation, c
 * Question specific history                                   
 * IOExceptions from jline encapsulated into runtime exceptions
 * Builder api
-* User input as result of builder
+* User input as end result of builder
 
 ## Usage
 
