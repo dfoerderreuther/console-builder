@@ -13,12 +13,47 @@
         <module>console-builder-example</module>
     </modules>
 
+    <scm>
+        <connection>scm:git:https://github.com/dfoerderreuther/console-builder.git</connection>
+        <url>https://github.com/dfoerderreuther/console-builder</url>
+        <developerConnection>scm:git:https://github.com/dfoerderreuther/console-builder.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray</id>
+            <url>https://api.bintray.com/maven/dfoerderreuther/console-builder/console-builder</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <contributors>
         <contributor>
             <name>Dominik Foerderreuther</name>
             <email>dominik@eleon.de</email>
         </contributor>
     </contributors>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
