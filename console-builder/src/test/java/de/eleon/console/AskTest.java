@@ -56,6 +56,7 @@ public class AskTest {
 
     @Before
     public void setUp() throws IOException {
+        System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
         Console.getInstance().consoleReader = consoleReader;
     }
 
