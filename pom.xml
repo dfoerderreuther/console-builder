@@ -22,7 +22,8 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray</id>
+            <id>bintray-dfoerderreuther-console-builder-console-builder</id>
+            <name>dfoerderreuther-console-builder-console-builder</name>
             <url>https://api.bintray.com/maven/dfoerderreuther/console-builder/console-builder</url>
         </repository>
     </distributionManagement>
