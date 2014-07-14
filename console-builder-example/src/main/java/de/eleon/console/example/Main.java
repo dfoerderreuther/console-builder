@@ -29,6 +29,12 @@ public class Main {
                 .useHistory()
                 .answer();
 
+        String company = ask("Please enter your company name")
+                .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
+                .optional()
+                .useHistory()
+                .answer();
+
         Gender gender = ask("Please enter your gender")
                 .answer(Gender.class, "Please enter valid gender");
 
@@ -43,6 +49,7 @@ public class Main {
 
         System.out.println("First name " + firstName +
                 ", last name " + lastName +
+                ", company " + company +
                 ", gender " + gender +
                 ", favoriteColor " + favoriteColor +
                 ", age " + age);

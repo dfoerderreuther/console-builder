@@ -98,8 +98,30 @@ Second run
     > <ArrowUp>|
     > red|     
     Color red
-    
-### Example 5, combinated questions
+
+
+### Example 5, optional question. Validate only if not empty
+
+    String company = ask("Please enter your company name")
+            .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
+            .optional()
+            .useHistory()
+            .answer();
+
+    System.out.println("company: " + company);
+
+Result in terminal:
+
+    Please enter your company name
+    > x
+    Invalid format
+
+    Please enter your company name
+    >
+    company:
+
+
+### Example 6, combinated questions
 
     Person person = new Person(
             Ask.ask("Please enter first name").validateWith(Validators.notEmpty("Empty not allowed")).answer(),

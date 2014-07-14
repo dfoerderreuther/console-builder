@@ -51,6 +51,7 @@ public class Ask {
     private List<Validator> validators = Lists.newArrayList();
     private List<Completer> completers = Lists.newArrayList();
     private Optional<String> history = Optional.absent();
+    private boolean optional = false;
 
     protected Ask(String question) {
         this.question = question;
@@ -106,6 +107,16 @@ public class Ask {
      */
     public Ask useHistoryFrom(String file) {
         this.history = Optional.of(file);
+        return this;
+    }
+
+    /**
+     * Disable validation of empty user inputs
+     *
+     * @return the builder instance
+     */
+    public Ask optional() {
+        this.optional = true;
         return this;
     }
 
@@ -232,6 +243,7 @@ public class Ask {
      * @return Iterable with error messages. Empty if valid.
      */
     private Iterable<String> validate(final String input) {
+        if (optional && input.isEmpty()) return Lists.newArrayList();
         return FluentIterable
                 .from(validators)
                 .filter(new Predicate<Validator>() {

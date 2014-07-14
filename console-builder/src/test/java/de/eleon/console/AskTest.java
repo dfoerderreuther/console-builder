@@ -156,13 +156,44 @@ public class AskTest {
         assertTrue(findBy("unknown value").isPresent());
     }
 
+    @Test
+    public void shouldNotValidateOptinalEmptyInput() throws IOException {
+        when(consoleReader.readLine()).thenReturn("");
+        ask("a or b").validateWith(testValidator()).optional().answer();
+
+        verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
+        assertFalse(findBy("invalid").isPresent());
+    }
+
+    @Test
+    public void shouldValidateOptinalButNotEmptyInput() throws IOException {
+        when(consoleReader.readLine()).thenReturn("te", "test");
+        ask("a or b").validateWith(testValidator()).optional().answer();
+
+        verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
+        assertTrue(findBy("invalid").isPresent());
+    }
+
+    private Validator testValidator() {
+        return new Validator() {
+            @Override
+            public boolean valid(String input) {
+                return input.equals("test");
+            }
+
+            @Override
+            public String message() {
+                return "invalid";
+            }
+        };
+    }
 
 
     private Optional<CharSequence> findBy(final String text) {
         return FluentIterable.from(printlnCaptor.getAllValues()).firstMatch(new Predicate<CharSequence>() {
             @Override
-            public boolean apply(CharSequence input) {
-                return input.toString().equals(text);
+            public boolean apply(CharSequence output) {
+                return output.toString().equals(text);
             }
         });
     }

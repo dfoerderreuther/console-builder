@@ -50,6 +50,14 @@
             <artifactId>powermock-api-mockito</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.jayway.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
 </project>
