@@ -1,4 +1,4 @@
-package de.eleon.console;
+package de.eleon.console.functional;
 
 public interface Validator {
 

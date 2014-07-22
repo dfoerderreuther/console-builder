@@ -13,11 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package de.eleon.console;
+package de.eleon.console.builder;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import de.eleon.console.functional.Transformers;
+import de.eleon.console.functional.Validator;
+import de.eleon.console.functional.Validators;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.FileNameCompleter;
@@ -33,7 +36,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
-import static de.eleon.console.Ask.ask;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -44,7 +46,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ConsoleReader.class)
-public class AskTest {
+public class AskBuilderTest {
 
     public enum TestEnum {a, b, c}
 
@@ -54,23 +56,24 @@ public class AskTest {
     @Captor
     ArgumentCaptor<CharSequence> printlnCaptor;
 
+
     @Before
     public void setUp() throws IOException {
         System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-        Console.getInstance().consoleReader = consoleReader;
+        ConsoleReaderWrapper.getInstance().consoleReader = consoleReader;
     }
 
     @Test
     public void shouldAnswer() throws IOException {
         when(consoleReader.readLine()).thenReturn("test");
-        String answer = ask("Hallo").answer();
+        String answer = AskBuilder.ask("Hallo").answer();
         assertThat(answer, is("test"));
     }
 
     @Test
     public void shouldAnswerInteger() throws IOException {
         when(consoleReader.readLine()).thenReturn("12");
-        int answer = ask("Question")
+        int answer = AskBuilder.ask("Question")
                 .answer(Transformers.toInteger());
         assertThat(answer, is(12));
     }
@@ -78,7 +81,7 @@ public class AskTest {
     @Test
     public void shouldAnswerIntegerAfterGrubbyInput() throws IOException {
         when(consoleReader.readLine()).thenReturn(" 12 ");
-        int answer = ask("Question")
+        int answer = AskBuilder.ask("Question")
                 .answer(Transformers.toInteger());
         assertThat(answer, is(12));
     }
@@ -86,7 +89,7 @@ public class AskTest {
     @Test
     public void shouldValidateInteger() throws IOException {
         when(consoleReader.readLine()).thenReturn("test", "12");
-        int answer = ask("Question")
+        int answer = AskBuilder.ask("Question")
                 .answer(Transformers.toInteger());
         assertThat(answer, is(12));
 
@@ -97,7 +100,7 @@ public class AskTest {
     @Test
     public void shouldValidateIntegerWithCustomMessage() throws IOException {
         when(consoleReader.readLine()).thenReturn("test", "12");
-        int answer = ask("Question")
+        int answer = AskBuilder.ask("Question")
                 .answer(Transformers.toInteger(), "wrong number");
         assertThat(answer, is(12));
 
@@ -109,14 +112,14 @@ public class AskTest {
     @Test
     public void shouldAddCompleter() {
         Completer completer = new FileNameCompleter();
-        ask("Question").completeWith(completer).answer();
+        AskBuilder.ask("Question").completeWith(completer).answer();
         verify(consoleReader).addCompleter(completer);
     }
 
     @Test
     public void shouldNotPrintErrorMessageIfValid() throws IOException {
         when(consoleReader.readLine()).thenReturn("test");
-        ask("Question").validateWith(Validators.notEmpty("should not be empty")).answer();
+        AskBuilder.ask("Question").validateWith(Validators.notEmpty("should not be empty")).answer();
         verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
         assertFalse(findBy("should not be empty").isPresent());
     }
@@ -124,7 +127,7 @@ public class AskTest {
     @Test
     public void shouldPrintErrorMessage() throws IOException {
         when(consoleReader.readLine()).thenReturn("", "test");
-        ask("Question").validateWith(Validators.notEmpty("should not be empty")).answer();
+        AskBuilder.ask("Question").validateWith(Validators.notEmpty("should not be empty")).answer();
         verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
         assertTrue(findBy("should not be empty").isPresent());
     }
@@ -132,7 +135,7 @@ public class AskTest {
     @Test
     public void shouldAnswerEnum() throws IOException {
         when(consoleReader.readLine()).thenReturn("a");
-        TestEnum testEnum = ask("a or b").answer(TestEnum.class);
+        TestEnum testEnum = AskBuilder.ask("a or b").answer(TestEnum.class);
 
         Assert.assertThat(testEnum, is(TestEnum.a));
     }
@@ -140,7 +143,7 @@ public class AskTest {
     @Test
     public void shouldAnswerEnumInWrongCase() throws IOException {
         when(consoleReader.readLine()).thenReturn("A");
-        TestEnum testEnum = ask("a or b").answer(TestEnum.class);
+        TestEnum testEnum = AskBuilder.ask("a or b").answer(TestEnum.class);
 
         Assert.assertThat(testEnum, is(TestEnum.a));
     }
@@ -148,7 +151,7 @@ public class AskTest {
     @Test
     public void shouldValidateEnum() throws IOException {
         when(consoleReader.readLine()).thenReturn("test", "a");
-        TestEnum testEnum = ask("a or b").answer(TestEnum.class);
+        TestEnum testEnum = AskBuilder.ask("a or b").answer(TestEnum.class);
 
         Assert.assertThat(testEnum, is(TestEnum.a));
 
@@ -159,7 +162,7 @@ public class AskTest {
     @Test
     public void shouldNotValidateOptinalEmptyInput() throws IOException {
         when(consoleReader.readLine()).thenReturn("");
-        ask("a or b").validateWith(testValidator()).optional().answer();
+        AskBuilder.ask("a or b").validateWith(testValidator()).optional().answer();
 
         verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
         assertFalse(findBy("invalid").isPresent());
@@ -168,10 +171,26 @@ public class AskTest {
     @Test
     public void shouldValidateOptinalButNotEmptyInput() throws IOException {
         when(consoleReader.readLine()).thenReturn("te", "test");
-        ask("a or b").validateWith(testValidator()).optional().answer();
+        AskBuilder.ask("a or b").validateWith(testValidator()).optional().answer();
 
         verify(consoleReader, atLeastOnce()).println(printlnCaptor.capture());
         assertTrue(findBy("invalid").isPresent());
+    }
+
+    @Test
+    public void shouldAnswerAbsentForOptionalEmptyString() throws IOException {
+        when(consoleReader.readLine()).thenReturn("");
+        Optional<String> optionalAnswer = AskBuilder.ask("Question?").optional().answer();
+
+        assertFalse(optionalAnswer.isPresent());
+    }
+
+    @Test
+    public void shouldAnswerPresentForOptionalString() throws IOException {
+        when(consoleReader.readLine()).thenReturn("answer");
+        Optional<String> optionalAnswer = AskBuilder.ask("Question?").optional().answer();
+
+        assertTrue(optionalAnswer.isPresent());
     }
 
     private Validator testValidator() {

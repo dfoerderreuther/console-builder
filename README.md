@@ -5,8 +5,9 @@ This is a small builder api for a console application. It supports validation, c
 ## Features
 * Validation
 * Completion
-* Conversion                                                  
-* Extensive enum support (completion, conversion and validation)
+* Conversion
+* Guava Optional support
+* Extensive enum support (automatic completion, conversion and validation)
 * History
 * Question specific history                                   
 * IOExceptions from jline encapsulated into runtime exceptions
@@ -17,12 +18,12 @@ This is a small builder api for a console application. It supports validation, c
 
 ### Example 1 (Validation)
     
-    String firstName = Ask.ask("Please enter your first name")
+    String firstName = Console.ask("Please enter your first name")
             .validateWith(Validators.notEmpty("Empty String not allowed"))
             .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
             .answer();
             
-    System.out.println("Hello " + firstName);
+    Console.println("Hello " + firstName);
     
 Result in terminal: 
     
@@ -43,9 +44,9 @@ Result in terminal:
               
     public enum Gender { MALE, FEMALE }
     ...                                
-    Gender gender = ask("Please enter your gender")
+    Gender gender = Console.ask("Please enter your gender")
             .answer(Gender.class, "Please enter valid gender");
-    System.out.println("Gender " + gender.toString());  
+    Console.println("Gender " + gender.toString());  
     
 Result in terminal: 
 
@@ -62,11 +63,11 @@ Result in terminal:
 
 ### Example 3 (completion, value transformation)
                                                     
-    Integer age = ask("how old are you?")
+    Integer age = Console.ask("how old are you?")
             .completeWith(new StringsCompleter("22", "33", "44", "55", "66"))
             .validateWith(validateAge("please enter valid age"))
             .answer(toInteger());          
-    System.out.println("Age " + age);  
+    Console.println("Age " + age);  
     
     
 Result in terminal: 
@@ -81,10 +82,10 @@ Result in terminal:
     
 ### Example 4 (history with specific file)
     
-    String favoriteColor = Ask.ask("What ist your favorite color?")
+    String favoriteColor = Console.ask("What ist your favorite color?")
             .useHistoryFrom("color")
             .answer();                                   
-    System.out.println("Color " + color); 
+    Console.println("Color " + color); 
     
 Result in terminal: 
 
@@ -100,15 +101,15 @@ Second run
     Color red
 
 
-### Example 5, optional question. Validate only if not empty
+### Example 5, optional question. Validate only if not empty and answer with Guava Optional
 
-    String company = ask("Please enter your company name")
+    Optional<String> company = Console.ask("Please enter your company name")
             .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
-            .optional()
             .useHistory()
+            .optional()
             .answer();
 
-    System.out.println("company: " + company);
+    Console.println("company: " + company.or("-");
 
 Result in terminal:
 
@@ -118,7 +119,7 @@ Result in terminal:
 
     Please enter your company name
     >
-    company:
+    company: -
 
 
 ### Example 6, combinated questions
@@ -129,7 +130,7 @@ Result in terminal:
             Ask.ask("Please enter age").answer(toInteger())
     );
 
-    System.out.println("person: " + person);
+    Console.println("person: " + person);
 
 Result in terminal: 
 

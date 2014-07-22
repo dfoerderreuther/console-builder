@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package de.eleon.console;
+package de.eleon.console.builder;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -21,14 +21,15 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import de.eleon.console.functional.Validator;
 import jline.console.completer.Completer;
 import jline.console.completer.EnumCompleter;
 
 import java.util.List;
 
-import static de.eleon.console.Transformers.toEnum;
-import static de.eleon.console.Validators.enumValidator;
-import static de.eleon.console.Validators.functionValidator;
+import static de.eleon.console.functional.Transformers.toEnum;
+import static de.eleon.console.functional.Validators.enumValidator;
+import static de.eleon.console.functional.Validators.functionValidator;
 
 /**
  * Ask is a builder for a single Question console.
@@ -45,7 +46,7 @@ import static de.eleon.console.Validators.functionValidator;
  *    Answer: Dominik
  *
  */
-public class Ask {
+public class AskBuilder {
 
     private String question;
     private List<Validator> validators = Lists.newArrayList();
@@ -53,18 +54,12 @@ public class Ask {
     private Optional<String> history = Optional.absent();
     private boolean optional = false;
 
-    protected Ask(String question) {
-        this.question = question;
+    public static AskBuilder ask(String question) {
+        return new AskBuilder(question);
     }
 
-    /**
-     * Start new Ask builder
-     *
-     * @param question The question to ask
-     * @return the builder instance
-     */
-    public static Ask ask(String question) {
-        return new Ask(question);
+    private AskBuilder(String question) {
+        this.question = question;
     }
 
     /**
@@ -73,7 +68,7 @@ public class Ask {
      * @param validator Validator to add
      * @return the builder instance
      */
-    public Ask validateWith(Validator validator) {
+    public AskBuilder validateWith(Validator validator) {
         this.validators.add(validator);
         return this;
     }
@@ -84,7 +79,7 @@ public class Ask {
      * @param completer {@see Completer} to add
      * @return the builder instance
      */
-    public Ask completeWith(Completer completer) {
+    public AskBuilder completeWith(Completer completer) {
         this.completers.add(completer);
         return this;
     }
@@ -94,7 +89,7 @@ public class Ask {
      *
      * @return the builder instance
      */
-    public Ask useHistory() {
+    public AskBuilder useHistory() {
         this.history = Optional.of("history");
         return this;
     }
@@ -105,7 +100,7 @@ public class Ask {
      * @param file Filename as String
      * @return the builder instance
      */
-    public Ask useHistoryFrom(String file) {
+    public AskBuilder useHistoryFrom(String file) {
         this.history = Optional.of(file);
         return this;
     }
@@ -115,9 +110,9 @@ public class Ask {
      *
      * @return the builder instance
      */
-    public Ask optional() {
+    public AnswerOptional optional() {
         this.optional = true;
-        return this;
+        return new AnswerOptional(this);
     }
 
     /**
@@ -132,7 +127,7 @@ public class Ask {
     /**
      * Return user input as T
      *
-     * @param function {@link Function} or {@link Transformer} for value conversion
+     * @param function {@link Function} or {@link de.eleon.console.functional.Transformer} for value conversion
      * @param <T> the return type
      * @return user input as T
      */
@@ -143,7 +138,7 @@ public class Ask {
     /**
      * Return user input as T
      *
-     * @param function {@link Function} or {@link Transformer} for value conversion
+     * @param function {@link Function} or {@link de.eleon.console.functional.Transformer} for value conversion
      * @param validationErrorMessage error message if function conversion fails
      * @param <T> the return type
      * @return user input as T
@@ -185,15 +180,15 @@ public class Ask {
      */
     private String initConsoleAndGetAnswer() {
 
-        Console console = initConsole();
+        ConsoleReaderWrapper consoleReaderWrapper = initConsole();
 
         while (true) {
-            String input = console.getInput();
-            if (validate(console, input)) {
+            String input = consoleReaderWrapper.getInput();
+            if (validate(consoleReaderWrapper, input)) {
                 return input;
             } else {
-                console.println("");
-                console.println(question);
+                consoleReaderWrapper.println("");
+                consoleReaderWrapper.println(question);
             }
         }
     }
@@ -203,32 +198,32 @@ public class Ask {
      *
      * @return Console instance
      */
-    private Console initConsole() {
-        Console console = Console.getInstance();
-        console.println("");
-        console.println(question);
-        console.setCompleters(completers);
+    private ConsoleReaderWrapper initConsole() {
+        ConsoleReaderWrapper consoleReaderWrapper = ConsoleReaderWrapper.getInstance();
+        consoleReaderWrapper.println("");
+        consoleReaderWrapper.println(question);
+        consoleReaderWrapper.setCompleters(completers);
         if (history.isPresent()) {
-            console.enableHistoryFrom(history.get());
+            consoleReaderWrapper.enableHistoryFrom(history.get());
         } else {
-            console.disableHistory();
+            consoleReaderWrapper.disableHistory();
         }
-        return console;
+        return consoleReaderWrapper;
     }
 
     /**
      * Validate user input with available validators
      *
-     * @param console Console to print errir messages
+     * @param consoleReaderWrapper Console to print errir messages
      * @param input User input as String
      * @return boolean of validation result. valid == true
      */
-    private boolean validate(Console console, String input) {
+    private boolean validate(ConsoleReaderWrapper consoleReaderWrapper, String input) {
         Iterable<String> errors = validate(input);
         if (!Iterables.isEmpty(errors)) {
-            console.beep();
+            consoleReaderWrapper.beep();
             for (String error : errors) {
-                console.println(error);
+                consoleReaderWrapper.println(error);
             }
             return false;
         } else {
