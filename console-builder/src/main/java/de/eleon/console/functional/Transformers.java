@@ -47,7 +47,7 @@ public class Transformers {
         return new Transformer<Integer>() {
             @Override
             public Integer apply(final String userIn) {
-                return Integer.parseInt(userIn);
+                return Integer.parseInt(userIn.trim());
             }
         };
     }
