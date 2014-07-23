@@ -50,7 +50,7 @@ public class ConsoleReaderWrapperTest {
 
     @Before
     public void setUp() throws IOException {
-        ConsoleReaderWrapper.getInstance().consoleReader = consoleReader;
+        ConsoleReaderWrapper.getInstance().setConsoleReader(consoleReader);
     }
 
     @Test

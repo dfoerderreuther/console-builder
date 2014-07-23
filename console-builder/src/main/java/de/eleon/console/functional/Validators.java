@@ -66,7 +66,7 @@ public class Validators {
         };
     }
 
-    public static Validator functionValidator(final Function function, final String message) {
+    public static Validator functionValidator(final Function<String, ?> function, final String message) {
         return new Validator() {
             @Override
             public boolean valid(String input) {

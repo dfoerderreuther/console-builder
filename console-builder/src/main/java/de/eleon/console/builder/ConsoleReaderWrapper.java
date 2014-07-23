@@ -36,8 +36,8 @@ public class ConsoleReaderWrapper {
 
     private static ConsoleReaderWrapper instance;
 
-    protected FileHistory history;
-    protected ConsoleReader consoleReader;
+    private FileHistory history;
+    private ConsoleReader consoleReader;
 
     private ConsoleReaderWrapper() {
         try {
@@ -60,11 +60,11 @@ public class ConsoleReaderWrapper {
         return instance;
     }
 
-    protected void init() {
+    void init() {
         consoleReader.setPrompt("> ");
     }
 
-    protected void enableHistoryFrom(String file) {
+    void enableHistoryFrom(String file) {
         try {
             Path directory = Paths.get(System.getProperty("user.home"), ".jline");
             Path historyFile = Paths.get(directory.toString(), file);
@@ -82,7 +82,7 @@ public class ConsoleReaderWrapper {
         }
     }
 
-    protected void disableHistory() {
+    void disableHistory() {
         consoleReader.setHistory(new MemoryHistory());
         consoleReader.setHistoryEnabled(false);
     }

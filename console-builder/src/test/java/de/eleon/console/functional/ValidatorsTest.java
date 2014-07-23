@@ -42,7 +42,7 @@ public class ValidatorsTest {
     @Test
     public void enumValidator_shouldBeValid() {
         assertThat(
-                Validators.enumValidator(TransformersTest.TestEnum.class, "error message").valid("a"),
+                Validators.enumValidator(TestEnum.class, "error message").valid("a"),
                 is(true)
         );
     }
@@ -50,7 +50,7 @@ public class ValidatorsTest {
     @Test
     public void enumValidator_shouldNotBeValid() {
         assertThat(
-                Validators.enumValidator(TransformersTest.TestEnum.class, "error message").valid("c"),
+                Validators.enumValidator(TestEnum.class, "error message").valid("c"),
                 is(false)
         );
     }
@@ -58,13 +58,33 @@ public class ValidatorsTest {
     @Test
     public void enumValidator_shouldHaveErrrorMessage() {
         assertThat(
-                Validators.enumValidator(TransformersTest.TestEnum.class, "error message").message(),
+                Validators.enumValidator(TestEnum.class, "error message").message(),
                 is("error message")
         );
     }
 
     @Test
-    public void function_shouldBeValid() throws Exception {
-        // TOOO
+    public void functionValidator_shouldBeValid() throws Exception {
+        assertThat(
+                Validators.functionValidator(Transformers.toInteger(), "error message").valid("1"),
+                is(true)
+        );
     }
+
+    @Test
+    public void functionValidator_shouldNotBeValid() throws Exception {
+        assertThat(
+                Validators.functionValidator(Transformers.toInteger(), "error message").valid("test"),
+                is(false)
+        );
+    }
+
+    @Test
+    public void functionValidator_shouldHaveErrorMessage() {
+        assertThat(
+                Validators.functionValidator(Transformers.toInteger(), "error message").message(),
+                is("error message")
+        );
+    }
+
 }

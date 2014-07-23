@@ -23,9 +23,9 @@ public class Person {
         MALE, FEMALE
     }
 
-    private String name;
-    private Gender gender;
-    private Integer age;
+    private final String name;
+    private final Gender gender;
+    private final Integer age;
 
     public Person(String name, Gender gender, Integer age) {
         this.name = name;

@@ -60,7 +60,7 @@ public class AskBuilderTest {
     @Before
     public void setUp() throws IOException {
         System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-        ConsoleReaderWrapper.getInstance().consoleReader = consoleReader;
+        ConsoleReaderWrapper.getInstance().setConsoleReader(consoleReader);
     }
 
     @Test

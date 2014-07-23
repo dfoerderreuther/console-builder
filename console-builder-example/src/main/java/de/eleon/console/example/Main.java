@@ -28,10 +28,10 @@ import static de.eleon.console.Console.ask;
 import static de.eleon.console.example.Person.Gender;
 import static de.eleon.console.functional.Transformers.toInteger;
 
-public class Main {
+class Main {
 
 
-    public Main() {
+    private Main() {
 
         String firstName = Console.ask("Please enter your first name")
                 .validateWith(Validators.notEmpty("Empty String not allowed"))

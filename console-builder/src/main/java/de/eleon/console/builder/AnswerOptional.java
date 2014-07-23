@@ -27,7 +27,7 @@ public class AnswerOptional {
 
     private final AskBuilder askBuilder;
 
-    protected AnswerOptional(AskBuilder askBuilder) {
+    AnswerOptional(AskBuilder askBuilder) {
         this.askBuilder = askBuilder;
     }
 

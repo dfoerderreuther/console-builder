@@ -48,9 +48,9 @@ import static de.eleon.console.functional.Validators.functionValidator;
  */
 public class AskBuilder {
 
-    private String question;
-    private List<Validator> validators = Lists.newArrayList();
-    private List<Completer> completers = Lists.newArrayList();
+    private final String question;
+    private final List<Validator> validators = Lists.newArrayList();
+    private final List<Completer> completers = Lists.newArrayList();
     private Optional<String> history = Optional.absent();
     private boolean optional = false;
 
