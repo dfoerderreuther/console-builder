@@ -4,7 +4,7 @@
 
     <groupId>de.eleon</groupId>
     <artifactId>console-builder-parent</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.2</version>
 
     <packaging>pom</packaging>
 
@@ -41,20 +41,6 @@
             <email>dominik@eleon.de</email>
         </contributor>
     </contributors>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <profiles>
         <profile>
@@ -94,7 +80,7 @@
             <dependency>
                 <groupId>de.eleon</groupId>
                 <artifactId>console-builder</artifactId>
-                <version>1.3-SNAPSHOT</version>
+                <version>1.2</version>
             </dependency>
 
             <dependency>
