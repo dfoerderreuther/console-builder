@@ -4,7 +4,7 @@
 
     <groupId>de.eleon</groupId>
     <artifactId>console-builder-parent</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -80,7 +80,7 @@
             <dependency>
                 <groupId>de.eleon</groupId>
                 <artifactId>console-builder</artifactId>
-                <version>1.3</version>
+                <version>1.4-SNAPSHOT</version>
             </dependency>
 
             <dependency>
