@@ -1,8 +1,8 @@
 package de.eleon.console.builder;
 
 import com.google.common.base.Optional;
-import de.eleon.console.functional.Transformer;
-import de.eleon.console.functional.Transformers;
+import de.eleon.console.builder.functional.Transformer;
+import de.eleon.console.builder.functional.Transformers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -28,9 +28,9 @@
                 <configuration>
                     <executable>javaw</executable>
                     <mainClass>de.eleon.console.example.Main</mainClass>
-                    <!--<arguments>
+                    <arguments>
                         <argument>-Djline.terminal=jline.NoInterruptUnixTerminal</argument>
-                    </arguments>-->
+                    </arguments>
                 </configuration>
             </plugin>
 

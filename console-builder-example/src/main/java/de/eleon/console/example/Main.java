@@ -16,64 +16,68 @@
 package de.eleon.console.example;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
-import de.eleon.console.Console;
-import de.eleon.console.functional.Validator;
-import de.eleon.console.functional.Validators;
+import de.eleon.console.builder.ConsoleBuilder;
+import de.eleon.console.builder.functional.Validator;
+import de.eleon.console.builder.functional.Validators;
 import jline.console.completer.StringsCompleter;
 
 import java.io.IOException;
 
-import static de.eleon.console.Console.ask;
+import static de.eleon.console.builder.ConsoleBuilder.ask;
+import static de.eleon.console.builder.functional.Transformers.toInteger;
 import static de.eleon.console.example.Person.Gender;
-import static de.eleon.console.functional.Transformers.toInteger;
 
 class Main {
 
 
     private Main() {
 
-        String firstName = Console.ask("Please enter your first name")
+        String firstName = ConsoleBuilder.ask("Please enter your first name")
                 .validateWith(Validators.notEmpty("Empty String not allowed"))
                 .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
                 .useHistory()
                 .answer();
 
-        String lastName = Console.ask("Please enter your last name")
+        String lastName = ConsoleBuilder.ask("Please enter your last name")
                 .validateWith(Validators.notEmpty("Empty String not allowed"))
                 .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
                 .useHistory()
                 .answer();
 
-        Optional<String> company = Console.ask("Please enter your company name")
+        Optional<String> company = ConsoleBuilder.ask("Please enter your company name")
                 .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
                 .useHistory()
                 .optional()
                 .answer();
 
-        Gender gender = Console.ask("Please enter your gender")
+        Gender gender = ConsoleBuilder.ask("Please enter your gender")
                 .answer(Gender.class, "Please enter valid gender");
 
-        String favoriteColor = Console.ask("What ist your favorite color?")
+        String favoriteColor = ConsoleBuilder.ask("What ist your favorite color?")
                 .useHistoryFrom("color")
                 .answer();
 
-        Integer age = Console.ask("how old are you?")
+        Integer age = ConsoleBuilder.ask("how old are you?")
                 .completeWith(new StringsCompleter("22", "33", "44", "55", "66"))
                 .validateWith(validateAge("please enter valid age"))
                 .answer(toInteger());
 
-        Console.println("First name " + firstName +
+        ConsoleBuilder.print("First name " + firstName +
                 ", last name " + lastName +
                 ", company " + company.or("-") +
                 ", gender " + gender +
                 ", favoriteColor " + favoriteColor +
                 ", age " + age);
 
+        ConsoleBuilder.newline();
+        ConsoleBuilder.newline();
 
-        // Example creation of object
+        ConsoleBuilder.print("Example creation of object with ");
+        ConsoleBuilder.print(ImmutableList.of("name", "gender", "age"));
 
-        Console.println("Create person");
+        ConsoleBuilder.print("Create person");
 
         Person person = new Person(
                 ask("Please enter your first name")
@@ -82,9 +86,7 @@ class Main {
                 ask("how old are you?").answer(toInteger())
         );
 
-        Console.println("person: " + person);
-
-        System.exit(0);
+        ConsoleBuilder.print("person: " + person);
 
     }
 

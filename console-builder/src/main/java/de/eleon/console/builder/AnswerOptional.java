@@ -43,7 +43,7 @@ public class AnswerOptional {
     /**
      * Return user input as Optional<T>
      *
-     * @param function {@link com.google.common.base.Function} or {@link de.eleon.console.functional.Transformer} for value conversion
+     * @param function {@link com.google.common.base.Function} or {@link de.eleon.console.builder.functional.Transformer} for value conversion
      * @param <T> the return type
      * @return user input as Optional<T>
      */
@@ -54,7 +54,7 @@ public class AnswerOptional {
     /**
      * Return user input as Optional<T>
      *
-     * @param function {@link Function} or {@link de.eleon.console.functional.Transformer} for value conversion
+     * @param function {@link Function} or {@link de.eleon.console.builder.functional.Transformer} for value conversion
      * @param validationErrorMessage error message if function conversion fails
      * @param <T> the return type
      * @return user input as Optional<T>

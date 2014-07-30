@@ -1,4 +1,4 @@
-package de.eleon.console.functional;
+package de.eleon.console.builder.functional;
 
 import org.junit.Test;
 

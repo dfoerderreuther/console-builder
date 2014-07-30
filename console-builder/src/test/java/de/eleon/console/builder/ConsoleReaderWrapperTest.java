@@ -19,16 +19,22 @@ import com.google.common.collect.ImmutableList;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.FileNameCompleter;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -36,7 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ConsoleReader.class)
+@PrepareForTest({ConsoleReader.class, ConsoleReaderFactory.class})
 public class ConsoleReaderWrapperTest {
 
     @Mock
@@ -48,22 +54,42 @@ public class ConsoleReaderWrapperTest {
     @Captor
     ArgumentCaptor<Completer> completerCaptor;
 
+    @Captor
+    ArgumentCaptor<Collection<? extends CharSequence>> columnCaptor;
+
+    ConsoleReaderWrapper underTest;
+
     @Before
     public void setUp() throws IOException {
-        ConsoleReaderWrapper.getInstance().setConsoleReader(consoleReader);
+        PowerMockito.spy(ConsoleReaderFactory.class);
+        PowerMockito.when(ConsoleReaderFactory.get()).thenReturn(consoleReader);
+        underTest = new ConsoleReaderWrapper();
+        System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
+    }
+
+    @After
+    public void tearDown() {
+        underTest.close();
     }
 
     @Test
-    public void shouldPrintln() throws IOException {
-        ConsoleReaderWrapper.getInstance().println("test");
+    public void shouldPrint() throws IOException {
+        underTest.print("test");
         verify(consoleReader).println(printlnCaptor.capture());
         assertThat(printlnCaptor.getValue().toString(), is("test"));
     }
 
     @Test
+    public void shouldPrintColumns() throws Exception {
+        underTest.print(ImmutableList.of("Test1", "Test2"));
+        Mockito.verify(consoleReader).printColumns(columnCaptor.capture());
+        MatcherAssert.assertThat(columnCaptor.getValue(), Matchers.contains((CharSequence) "Test1", "Test2"));
+    }
+
+    @Test
     public void shouldSetCompleters() {
         Completer completer = new FileNameCompleter();
-        ConsoleReaderWrapper.getInstance().setCompleters(ImmutableList.<Completer>builder().add(completer).build());
+        underTest.setCompleters(ImmutableList.<Completer>builder().add(completer).build());
         verify(consoleReader).addCompleter(completerCaptor.capture());
         assertThat(completerCaptor.getValue(), is(completer));
     }
@@ -71,13 +97,13 @@ public class ConsoleReaderWrapperTest {
     @Test
     public void shouldGetInput() throws IOException {
         when(consoleReader.readLine()).thenReturn("input message");
-        String input = ConsoleReaderWrapper.getInstance().getInput();
+        String input = underTest.getInput();
         assertThat(input, is("input message"));
     }
 
     @Test
     public void shouldBeep() throws IOException {
-        ConsoleReaderWrapper.getInstance().beep();
+        underTest.beep();
         verify(consoleReader).beep();
     }
 

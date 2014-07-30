@@ -1,4 +1,4 @@
-package de.eleon.console.functional;
+package de.eleon.console.builder.functional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class TransformersTest {
     @Test
     public void shouldNotTransformUnknownValueToEnum() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("could not find value c in enum de.eleon.console.functional.TransformersTest$TestEnum");
+        thrown.expectMessage("could not find value c in enum de.eleon.console.builder.functional.TransformersTest$TestEnum");
         Transformers.toEnum(TestEnum.class).apply("c");
     }
 

@@ -26,38 +26,24 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * ConsoleReaderWrapper is a Wrapper around ConsoleReader. It capsules IOExceptions into Runtime Exceptions and facilitate usage of history. ConsoleReaderWrapper is a singleton.
  */
-public class ConsoleReaderWrapper {
-
-
-    private static ConsoleReaderWrapper instance;
+class ConsoleReaderWrapper {
 
     private FileHistory history;
     private ConsoleReader consoleReader;
 
-    private ConsoleReaderWrapper() {
+    public ConsoleReaderWrapper() {
         try {
-            this.consoleReader = new ConsoleReader();
+            this.consoleReader = ConsoleReaderFactory.get();
         } catch (IOException e) {
             throw new IllegalStateException("Can't create console", e);
         }
         this.init();
-    }
-
-    /**
-     * Get singleton instance of ConsoleReaderWrapper.
-     *
-     * @return ConsoleReaderWrapper instance
-     */
-    public static ConsoleReaderWrapper getInstance() {
-        if (instance == null) {
-            instance = new ConsoleReaderWrapper();
-        }
-        return instance;
     }
 
     void init() {
@@ -110,11 +96,26 @@ public class ConsoleReaderWrapper {
      *
      * @param charSequence to print
      */
-    public void println(CharSequence charSequence) {
+    public void print(CharSequence charSequence) {
         try {
             consoleReader.println(charSequence);
+            consoleReader.flush();
         } catch (IOException e) {
             throw new IllegalStateException("Can't write to console", e);
+        }
+    }
+
+    /**
+     * Print columns to console
+     *
+     * @param columns Collection of CharSequences to print
+     */
+    public void print(Collection<? extends CharSequence> columns) {
+        try {
+            consoleReader.printColumns(columns);
+            consoleReader.flush();
+        } catch (IOException e) {
+            throw new IllegalStateException("Can't write columns to console", e);
         }
     }
 
@@ -167,6 +168,11 @@ public class ConsoleReaderWrapper {
         } catch (IOException e) {
             throw new IllegalStateException("Can't write to console", e);
         }
+    }
+
+
+    public void close() {
+        consoleReader.shutdown();
     }
 
 }

@@ -21,15 +21,15 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import de.eleon.console.functional.Validator;
+import de.eleon.console.builder.functional.Validator;
 import jline.console.completer.Completer;
 import jline.console.completer.EnumCompleter;
 
 import java.util.List;
 
-import static de.eleon.console.functional.Transformers.toEnum;
-import static de.eleon.console.functional.Validators.enumValidator;
-import static de.eleon.console.functional.Validators.functionValidator;
+import static de.eleon.console.builder.functional.Transformers.toEnum;
+import static de.eleon.console.builder.functional.Validators.enumValidator;
+import static de.eleon.console.builder.functional.Validators.functionValidator;
 
 /**
  * Ask is a builder for a single Question console.
@@ -37,7 +37,7 @@ import static de.eleon.console.functional.Validators.functionValidator;
  * Example:
  *
  *    String answer = Ask.ask("What is your Name?").answer();
- *    System.out.println("Answer: " + answer);
+ *    System.out.print("Answer: " + answer);
  *
  * The result in the terminal will looks like
  *
@@ -54,7 +54,7 @@ public class AskBuilder {
     private Optional<String> history = Optional.absent();
     private boolean optional = false;
 
-    public static AskBuilder ask(String question) {
+    static AskBuilder ask(String question) {
         return new AskBuilder(question);
     }
 
@@ -127,7 +127,7 @@ public class AskBuilder {
     /**
      * Return user input as T
      *
-     * @param function {@link Function} or {@link de.eleon.console.functional.Transformer} for value conversion
+     * @param function {@link Function} or {@link de.eleon.console.builder.functional.Transformer} for value conversion
      * @param <T> the return type
      * @return user input as T
      */
@@ -138,7 +138,7 @@ public class AskBuilder {
     /**
      * Return user input as T
      *
-     * @param function {@link Function} or {@link de.eleon.console.functional.Transformer} for value conversion
+     * @param function {@link Function} or {@link de.eleon.console.builder.functional.Transformer} for value conversion
      * @param validationErrorMessage error message if function conversion fails
      * @param <T> the return type
      * @return user input as T
@@ -182,15 +182,20 @@ public class AskBuilder {
 
         ConsoleReaderWrapper consoleReaderWrapper = initConsole();
 
-        while (true) {
-            String input = consoleReaderWrapper.getInput();
-            if (validate(consoleReaderWrapper, input)) {
-                return input;
-            } else {
-                consoleReaderWrapper.println("");
-                consoleReaderWrapper.println(question);
+        String input = "";
+        boolean valid = false;
+
+        while (!valid) {
+            input = consoleReaderWrapper.getInput();
+            valid = validate(consoleReaderWrapper, input);
+            if (!valid) {
+                consoleReaderWrapper.print("");
+                consoleReaderWrapper.print(question);
             }
         }
+
+        consoleReaderWrapper.close();
+        return input;
     }
 
     /**
@@ -199,9 +204,9 @@ public class AskBuilder {
      * @return Console instance
      */
     private ConsoleReaderWrapper initConsole() {
-        ConsoleReaderWrapper consoleReaderWrapper = ConsoleReaderWrapper.getInstance();
-        consoleReaderWrapper.println("");
-        consoleReaderWrapper.println(question);
+        ConsoleReaderWrapper consoleReaderWrapper = new ConsoleReaderWrapper();
+        consoleReaderWrapper.print("");
+        consoleReaderWrapper.print(question);
         consoleReaderWrapper.setCompleters(completers);
         if (history.isPresent()) {
             consoleReaderWrapper.enableHistoryFrom(history.get());
@@ -223,7 +228,7 @@ public class AskBuilder {
         if (!Iterables.isEmpty(errors)) {
             consoleReaderWrapper.beep();
             for (String error : errors) {
-                consoleReaderWrapper.println(error);
+                consoleReaderWrapper.print(error);
             }
             return false;
         } else {

@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package de.eleon.console.functional;
+package de.eleon.console.builder.functional;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;

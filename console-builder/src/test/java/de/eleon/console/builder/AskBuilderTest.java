@@ -18,9 +18,9 @@ package de.eleon.console.builder;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import de.eleon.console.functional.Transformers;
-import de.eleon.console.functional.Validator;
-import de.eleon.console.functional.Validators;
+import de.eleon.console.builder.functional.Transformers;
+import de.eleon.console.builder.functional.Validator;
+import de.eleon.console.builder.functional.Validators;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.FileNameCompleter;
@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -45,7 +46,7 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ConsoleReader.class)
+@PrepareForTest({ConsoleReader.class, ConsoleReaderFactory.class})
 public class AskBuilderTest {
 
     public enum TestEnum {a, b, c}
@@ -56,11 +57,11 @@ public class AskBuilderTest {
     @Captor
     ArgumentCaptor<CharSequence> printlnCaptor;
 
-
     @Before
     public void setUp() throws IOException {
+        PowerMockito.spy(ConsoleReaderFactory.class);
+        PowerMockito.when(ConsoleReaderFactory.get()).thenReturn(consoleReader);
         System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-        ConsoleReaderWrapper.getInstance().setConsoleReader(consoleReader);
     }
 
     @Test
