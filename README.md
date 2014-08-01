@@ -145,5 +145,7 @@ Result in terminal:
     
     person: Person{name=Buzz Lightyear, gender=MALE, age=25}
 
-    
+
+## Known Issues
         
+console-builder is based on jline. On my linux console I have problems with the combination of jline and the exec-maven-plugin. After finishing the programm, my terminal doesn't work right and I have to close it and open a new one.
