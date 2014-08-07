@@ -160,9 +160,11 @@ Result in terminal:
     person: Person{name=Buzz Lightyear, gender=MALE, age=25}
     
 
-## How to run console-builder-example (> v1.3)
+## How to run console-builder-example
 
 console-builder-example is configured to a single runnable jar with maven-assembly-plugin. Run it with 
+
+    wget http://search.maven.org/remotecontent?filepath=de/eleon/console-builder-example/X.X/console-builder-example-X.X.jar
 
     java -jar console-builder-example-X.X.jar
 
