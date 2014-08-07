@@ -4,7 +4,7 @@
 
     <groupId>de.eleon</groupId>
     <artifactId>console-builder-parent</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
     <name>ConsoleBuilder</name>
     <description>ConsoleBuilder: String firstName = ConsoleBuilder.ask("What's your name?").answer();</description>
     <url>https://github.com/dfoerderreuther/console-builder</url>
@@ -108,7 +108,7 @@
             <dependency>
                 <groupId>de.eleon</groupId>
                 <artifactId>console-builder</artifactId>
-                <version>1.3</version>
+                <version>1.4-SNAPSHOT</version>
             </dependency>
 
             <dependency>

@@ -12,7 +12,17 @@ This is a small builder api for a console application. It supports validation, c
 * Question specific history                                   
 * IOExceptions from jline encapsulated into runtime exceptions
 * Builder api
-* User input as end result of builder
+* User input as result of builder
+
+## Installation
+
+console-builder is available on maven-central. Add the following to your pom.xml
+
+    <dependency>
+        <groupId>de.eleon</groupId>
+        <artifactId>console-builder</artifactId>
+        <version>1.3</version>
+    </dependency>
 
 ## Usage
 
@@ -144,6 +154,13 @@ Result in terminal:
     > 25
     
     person: Person{name=Buzz Lightyear, gender=MALE, age=25}
+    
+
+## How to run console-builder-example (> v1.3)
+
+console-builder-example is configured to a single runnable jar with maven-assembly-plugin. Run it with 
+
+    java -jar console-builder-example-X.X.jar
 
 
 ## Known Issues
