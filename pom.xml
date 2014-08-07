@@ -26,6 +26,7 @@
 
     <properties>
         <additionalparam>-Xdoclint:none</additionalparam>
+        <java.version>1.6</java.version>
     </properties>
 
     <scm>
@@ -101,6 +102,19 @@
             </build>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>

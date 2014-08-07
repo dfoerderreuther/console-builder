@@ -33,6 +33,8 @@ import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -65,21 +67,21 @@ public class ConsoleBuilderTest {
     @Test
     public void shouldPrint() throws Exception {
         ConsoleBuilder.print("test");
-        Mockito.verify(consoleReader).println(printlnCaptor.capture());
+        verify(consoleReader).println(printlnCaptor.capture());
         assertThat(printlnCaptor.getValue().toString(), is("test"));
     }
 
     @Test
     public void shouldPrintColumns() throws Exception {
         ConsoleBuilder.print(ImmutableList.of("Test1", "Test2"));
-        Mockito.verify(consoleReader).printColumns(columnCaptor.capture());
-        assertThat(columnCaptor.getValue(), Matchers.contains((CharSequence) "Test1", "Test2"));
+        verify(consoleReader).printColumns(columnCaptor.capture());
+        assertThat(columnCaptor.getValue(), contains((CharSequence) "Test1", "Test2"));
     }
 
     @Test
     public void shouldPrintNewline() throws Exception {
         ConsoleBuilder.newline();
-        Mockito.verify(consoleReader).println(printlnCaptor.capture());
+        verify(consoleReader).println(printlnCaptor.capture());
         assertThat(printlnCaptor.getValue().toString(), is(""));
     }
 

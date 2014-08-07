@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -82,8 +83,8 @@ public class ConsoleReaderWrapperTest {
     @Test
     public void shouldPrintColumns() throws Exception {
         underTest.print(ImmutableList.of("Test1", "Test2"));
-        Mockito.verify(consoleReader).printColumns(columnCaptor.capture());
-        MatcherAssert.assertThat(columnCaptor.getValue(), Matchers.contains((CharSequence) "Test1", "Test2"));
+        verify(consoleReader).printColumns(columnCaptor.capture());
+        assertThat(columnCaptor.getValue(), contains((CharSequence) "Test1", "Test2"));
     }
 
     @Test

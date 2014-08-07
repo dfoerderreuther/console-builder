@@ -167,7 +167,7 @@ console-builder-example is configured to a single runnable jar with maven-assemb
     
 ### exec-maven-plugin    
         
-console-builder is based on jline. On my linux console I have problems with the combination of jline and the exec-maven-plugin. After finishing the programm, my terminal doesn't work right and I have to close it and open a new one.
+console-builder is based on jline. Within my terminal I have problems with the combination of jline and the exec-maven-plugin. After finishing the programm, my terminal doesn't work right and I have to close it and open a new one.
 
 ### Test inside of IDE
 

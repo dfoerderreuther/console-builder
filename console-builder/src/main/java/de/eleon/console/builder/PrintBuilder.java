@@ -15,19 +15,33 @@
 */
 package de.eleon.console.builder;
 
+import com.google.common.base.Predicate;
+
 import java.util.Collection;
 
 public class PrintBuilder {
 
-    static void print(CharSequence line) {
-        ConsoleReaderWrapper consoleReaderWrapper = new ConsoleReaderWrapper();
-        consoleReaderWrapper.print(line);
-        consoleReaderWrapper.close();
+    static void print(final CharSequence line) {
+        print(new Predicate<ConsoleReaderWrapper>() {
+            public boolean apply(ConsoleReaderWrapper consoleReaderWrapper) {
+                consoleReaderWrapper.print(line);
+                return false;
+            }
+        });
     }
 
-    static void print(Collection<? extends CharSequence> columns) {
+    static void print(final Collection<? extends CharSequence> columns) {
+        print(new Predicate<ConsoleReaderWrapper>() {
+            public boolean apply(ConsoleReaderWrapper consoleReaderWrapper) {
+                consoleReaderWrapper.print(columns);
+                return false;
+            }
+        });
+    }
+
+    private static void print(Predicate<ConsoleReaderWrapper> function) {
         ConsoleReaderWrapper consoleReaderWrapper = new ConsoleReaderWrapper();
-        consoleReaderWrapper.print(columns);
+        function.apply(consoleReaderWrapper);
         consoleReaderWrapper.close();
     }
 

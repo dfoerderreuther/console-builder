@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.verify;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ConsoleReader.class, ConsoleReaderFactory.class})
@@ -43,14 +44,14 @@ public class PrintBuilderTest {
     @Test
     public void shouldPrint() throws Exception {
         PrintBuilder.print("test");
-        Mockito.verify(consoleReader).println(printlnCaptor.capture());
+        verify(consoleReader).println(printlnCaptor.capture());
         assertThat(printlnCaptor.getValue().toString(), is("test"));
     }
 
     @Test
     public void shouldPrintColumns() throws Exception {
         PrintBuilder.print(ImmutableList.of("Test1", "Test2"));
-        Mockito.verify(consoleReader).printColumns(columnCaptor.capture());
+        verify(consoleReader).printColumns(columnCaptor.capture());
         assertThat(columnCaptor.getValue(), Matchers.contains((CharSequence) "Test1", "Test2"));
     }
 }
