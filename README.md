@@ -164,5 +164,16 @@ console-builder-example is configured to a single runnable jar with maven-assemb
 
 
 ## Known Issues
+    
+### exec-maven-plugin    
         
 console-builder is based on jline. On my linux console I have problems with the combination of jline and the exec-maven-plugin. After finishing the programm, my terminal doesn't work right and I have to close it and open a new one.
+
+### Test inside of IDE
+
+If you wan't to run it from your IDE (tested with IntelliJ Idea and Eclipse), start it with the following property.
+
+    System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
+    
+Completion and history are not supported within the IDE console.
+
