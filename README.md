@@ -2,6 +2,8 @@
 
 This is a small builder api for a console application. It supports validation, completion and history. Used libraries are jline and guava (compile and runtime).
 
+[![Build Status](https://drone.io/github.com/dfoerderreuther/console-builder/status.png)](https://drone.io/github.com/dfoerderreuther/console-builder/latest)
+
 ## Features
 * Validation
 * Completion
