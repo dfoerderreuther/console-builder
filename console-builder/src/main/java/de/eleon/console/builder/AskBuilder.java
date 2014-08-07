@@ -34,17 +34,6 @@ import static de.eleon.console.builder.functional.Validators.functionValidator;
 /**
  * Ask is a builder for a single Question console.
  *
- * Example:
- *
- *    String answer = Ask.ask("What is your Name?").answer();
- *    System.out.print("Answer: " + answer);
- *
- * The result in the terminal will looks like
- *
- *    What is your Name?
- *    > Dominik|
- *    Answer: Dominik
- *
  */
 public class AskBuilder {
 

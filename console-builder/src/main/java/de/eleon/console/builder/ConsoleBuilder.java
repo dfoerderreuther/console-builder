@@ -1,12 +1,29 @@
 
 package de.eleon.console.builder;
 
+import de.eleon.console.builder.functional.Applyable;
+
 import java.util.Collection;
 
+/**
+ * Use the ConsoleBuilder to build console dialogs or simply to print something on the terminal.
+ *
+ * Example:
+ *
+ *    String answer = ConsoleBuilder.ask("What is your Name?").answer();
+ *    System.out.print("Answer: " + answer);
+ *
+ * The result in the terminal will looks like
+ *
+ *    What is your Name?
+ *    > Dominik|
+ *    Answer: Dominik
+ *
+ */
 public class ConsoleBuilder {
 
     /**
-     * Start new Ask builder
+     * Start new AskBuilder to build a user dialog within the terminal
      *
      * @param question The question to ask
      * @return the builder instance
@@ -20,8 +37,12 @@ public class ConsoleBuilder {
      *
      * @param line CharSequence to print
      */
-    public static void print(CharSequence line) {
-        PrintBuilder.print(line);
+    public static void print(final CharSequence line) {
+        print(new Applyable<ConsoleReaderWrapper>() {
+            public void apply(ConsoleReaderWrapper consoleReaderWrapper) {
+                consoleReaderWrapper.print(line);
+            }
+        });
     }
 
     /**
@@ -29,8 +50,12 @@ public class ConsoleBuilder {
      *
      * @param columns Collections of CharSequences to print
      */
-    public static void print(Collection<? extends CharSequence> columns) {
-        PrintBuilder.print(columns);
+    public static void print(final Collection<? extends CharSequence> columns) {
+        print(new Applyable<ConsoleReaderWrapper>() {
+            public void apply(ConsoleReaderWrapper consoleReaderWrapper) {
+                consoleReaderWrapper.print(columns);
+            }
+        });
     }
 
     /**
@@ -38,5 +63,16 @@ public class ConsoleBuilder {
      */
     public static void newline() {
         print("");
+    }
+
+    /**
+     * print applyable
+     *
+     * @param applyable Applyable with print method
+     */
+    private static void print(Applyable<ConsoleReaderWrapper> applyable) {
+        ConsoleReaderWrapper consoleReaderWrapper = new ConsoleReaderWrapper();
+        applyable.apply(consoleReaderWrapper);
+        consoleReaderWrapper.close();
     }
 }

@@ -2,6 +2,8 @@
 
 This is a small builder api for a console application. It supports validation, completion and history. Used libraries are jline and guava (compile and runtime).
 
+## Build status
+
 [![Build Status](https://drone.io/github.com/dfoerderreuther/console-builder/status.png)](https://drone.io/github.com/dfoerderreuther/console-builder/latest)
 
 ## Features
@@ -113,7 +115,7 @@ Second run
     Color red
 
 
-### Example 5, optional question. Validate only if not empty and answer with Guava Optional
+### Example 5, optional question. Validate only if not empty and return answer as Guava Optional
 
     Optional<String> company = ConsoleBuilder.ask("Please enter your company name")
             .validateWith(Validators.regex("[a-zA-Z0-9\\-]{2,}", "Invalid format"))
