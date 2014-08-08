@@ -164,9 +164,9 @@ Result in terminal:
 
 console-builder-example is configured to a single runnable jar with maven-assembly-plugin. Run it with 
 
-    wget http://search.maven.org/remotecontent?filepath=de/eleon/console-builder-example/X.X/console-builder-example-X.X.jar
+    wget http://search.maven.org/remotecontent?filepath=de/eleon/console-builder-example/1.4/console-builder-example-1.4.jar
 
-    java -jar console-builder-example-X.X.jar
+    java -jar console-builder-example-1.4.jar
 
 
 ## Known issues
