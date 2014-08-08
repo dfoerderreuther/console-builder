@@ -25,7 +25,7 @@ console-builder is available on maven-central. Add the following to your pom.xml
     <dependency>
         <groupId>de.eleon</groupId>
         <artifactId>console-builder</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
     </dependency>
 
 ## Usage
