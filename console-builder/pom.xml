@@ -10,6 +10,40 @@
 
     <packaging>jar</packaging>
 
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>de.eleon</groupId>
+                        <artifactId>report2image</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>report2image</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <reports>
+                                <report>
+                                    <html>console-builder/target/site/jacoco/index.html</html>
+                                    <image>console-builder/target/jacoco.png</image>
+                                </report>
+                            </reports>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+
+
+    </profiles>
+
 
     <dependencies>
 
